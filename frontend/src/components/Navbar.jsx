@@ -1,8 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Container, Box } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
+  const { user, logoutUser } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logoutUser();
+    alert('Logged out successfully');
+    navigate('/login');
+  };
+
   return (
     <AppBar 
       position="sticky" 
@@ -33,29 +43,51 @@ export default function Navbar() {
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Button 
-              color="inherit" 
-              component={Link}
-              to="/login"
-              sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
-            >
-              Login
-            </Button>
-            <Button 
-              variant="contained" 
-              color="primary"
-              component={Link}
-              to="/register"
-              sx={{
-                boxShadow: '0 4px 12px 0 rgba(79, 70, 229, 0.15)',
-                '&:hover': {
-                  boxShadow: '0 6px 16px 0 rgba(79, 70, 229, 0.25)',
-                  transform: 'translateY(-1px)',
-                }
-              }}
-            >
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <Typography variant="body2" sx={{ mr: 1, color: 'text.secondary', fontSize: '0.9rem' }}>
+                  Hello, <span style={{ fontWeight: 600, color: '#1e293b' }}>{user.username}</span> ({user.role})
+                </Typography>
+                <Button 
+                  variant="outlined" 
+                  color="primary"
+                  onClick={handleLogout}
+                  sx={{
+                    borderRadius: 24,
+                    padding: '6px 18px',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  color="inherit" 
+                  component={Link}
+                  to="/login"
+                  sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+                >
+                  Login
+                </Button>
+                <Button 
+                  variant="contained" 
+                  color="primary"
+                  component={Link}
+                  to="/register"
+                  sx={{
+                    boxShadow: '0 4px 12px 0 rgba(79, 70, 229, 0.15)',
+                    '&:hover': {
+                      boxShadow: '0 6px 16px 0 rgba(79, 70, 229, 0.25)',
+                      transform: 'translateY(-1px)',
+                    }
+                  }}
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Box, 
   Container, 
@@ -7,21 +7,47 @@ import {
   CardContent, 
   Typography, 
   TextField, 
-  Button, 
-  MenuItem 
+  Button 
 } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
+import API from '../../api/api';
 
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('student');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Register Submitted:', { name, email, role, password, confirmPassword });
+
+    if (!name || !email || !password || !confirmPassword) {
+      alert('All fields are required');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await API.post('/auth/register', { username: name, email, password });
+      
+      if (response.data.success) {
+        alert('Registration successful! Redirecting to login page...');
+        navigate('/login');
+      }
+    } catch (err) {
+      const errMsg = err.response?.data?.message || 'Registration failed';
+      alert(errMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -82,22 +108,6 @@ export default function Register() {
             />
             
             <TextField
-              select
-              margin="normal"
-              required
-              fullWidth
-              id="role"
-              label="Join As"
-              name="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              sx={{ mb: 2, textAlign: 'left' }}
-            >
-              <MenuItem value="student">Student</MenuItem>
-              <MenuItem value="trainer">Trainer</MenuItem>
-            </TextField>
-
-            <TextField
               margin="normal"
               required
               fullWidth
@@ -130,6 +140,7 @@ export default function Register() {
               variant="contained"
               color="primary"
               size="large"
+              disabled={loading}
               sx={{ 
                 py: 1.5, 
                 mb: 3, 
@@ -139,7 +150,7 @@ export default function Register() {
                 }
               }}
             >
-              Sign Up
+              {loading ? 'Creating Account...' : 'Sign Up'}
             </Button>
 
             <Typography variant="body2" color="text.secondary">

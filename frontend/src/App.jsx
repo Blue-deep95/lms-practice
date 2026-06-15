@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Box, ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 
@@ -9,6 +8,11 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/common/LandingPage';
 import Login from './pages/common/Login';
 import Register from './pages/common/Register';
+import ForgotPassword from './pages/common/ForgotPassword';
+import StudentDashboard from './pages/student/StudentDashboard';
+import TrainerDashboard from './pages/trainer/TrainerDashboard';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import { AuthProvider } from './context/AuthContext';
 
 // Minimal theme config to apply rounded borders, styling overrides, and soft shadows globally
 const theme = createTheme({
@@ -76,21 +80,27 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
-          {/* Shared Navbar at the top of all pages */}
-          <Navbar />
-          
-          {/* Page Routing */}
-          <Box sx={{ flexGrow: 1 }}>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-            </Routes>
+      <AuthProvider>
+        <Router>
+          <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
+            {/* Shared Navbar at the top of all pages */}
+            <Navbar />
+            
+            {/* Page Routing */}
+            <Box sx={{ flexGrow: 1 }}>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/student-dashboard" element={<StudentDashboard />} />
+                <Route path="/trainer-dashboard" element={<TrainerDashboard />} />
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              </Routes>
+            </Box>
           </Box>
-        </Box>
-      </Router>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

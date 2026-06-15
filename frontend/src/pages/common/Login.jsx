@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Box, 
   Container, 
@@ -7,20 +7,44 @@ import {
   CardContent, 
   Typography, 
   TextField, 
-  Button, 
-  Checkbox, 
-  FormControlLabel, 
-  Stack 
+  Button
 } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
+import API from '../../api/api';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const { loginUser } = useAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login Submitted:', { email, password });
+
+    if (!email || !password) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await API.post('/auth/login', { email, password });
+      
+      if (response.data.success) {
+        localStorage.setItem('token', response.data.accessToken);
+        loginUser(response.data.user);
+        alert('Login successful!');
+        navigate('/student-dashboard');
+      }
+    } catch (err) {
+      const errMsg = err.response?.data?.message || 'Login failed';
+      alert(errMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -81,15 +105,11 @@ export default function Login() {
               sx={{ mb: 2 }}
             />
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3, width: '100%' }}>
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label={<Typography variant="body2">Remember me</Typography>}
-              />
-              <Typography variant="body2" component={Link} to="#" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 600 }}>
+            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+              <Typography variant="body2" component={Link} to="/forgot-password" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 600 }}>
                 Forgot password?
               </Typography>
-            </Stack>
+            </Box>
 
             <Button
               type="submit"
@@ -97,6 +117,7 @@ export default function Login() {
               variant="contained"
               color="primary"
               size="large"
+              disabled={loading}
               sx={{ 
                 py: 1.5, 
                 mb: 3, 
@@ -106,7 +127,7 @@ export default function Login() {
                 }
               }}
             >
-              Sign In
+              {loading ? 'Signing In...' : 'Sign In'}
             </Button>
 
             <Typography variant="body2" color="text.secondary">
