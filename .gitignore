@@ -30,6 +30,7 @@ lerna-debug.log*
 ._*
 Thumbs.db
 ehthumbs.db
+/explainations/
 
 # IDEs and Editors
 .vscode/

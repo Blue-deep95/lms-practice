@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Box, 
@@ -7,9 +7,20 @@ import {
   CardContent, 
   Typography, 
   TextField, 
-  Button 
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  CircularProgress,
+  Alert,
+  IconButton,
+  InputAdornment
 } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
 import API from '../../api/api';
 
 export default function Register() {
@@ -19,7 +30,86 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // OTP Verification States
+  const [otpModalOpen, setOtpModalOpen] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpError, setOtpError] = useState('');
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [resendCountdown, setResendCountdown] = useState(0);
+
   const navigate = useNavigate();
+
+  // Resend countdown effect
+  useEffect(() => {
+    let timer;
+    if (resendCountdown > 0) {
+      timer = setTimeout(() => {
+        setResendCountdown(resendCountdown - 1);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [resendCountdown]);
+
+  // Request code to be sent to user's email
+  const handleSendOtp = async () => {
+    if (!email) {
+      alert('Please enter your email address first');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+
+    try {
+      setOtpLoading(true);
+      setOtpError('');
+      const response = await API.post('/auth/send-otp', { email });
+      if (response.data.success) {
+        setOtpModalOpen(true);
+        setResendCountdown(30);
+      } else {
+        setOtpError(response.data.message || 'Failed to send OTP code.');
+        setOtpModalOpen(true); // Open modal anyway so user can see verification UI
+      }
+    } catch (err) {
+      const errMsg = err.response?.data?.message || 'Error sending OTP. Please check your backend connection.';
+      setOtpError(errMsg);
+      // Open modal anyway so user can inspect or test dialog UI
+      setOtpModalOpen(true);
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  // Submit entered code for verification
+  const handleVerifyOtp = async () => {
+    if (!otpCode || otpCode.length !== 6) {
+      setOtpError('Please enter a valid 6-digit verification code.');
+      return;
+    }
+
+    try {
+      setOtpLoading(true);
+      setOtpError('');
+      const response = await API.post('/auth/verify-otp', { email, otp: otpCode });
+      if (response.data.success) {
+        setIsOtpVerified(true);
+        setOtpModalOpen(false);
+        alert('Email address verified successfully!');
+      } else {
+        setOtpError(response.data.message || 'Invalid verification code. Please try again.');
+      }
+    } catch (err) {
+      const errMsg = err.response?.data?.message || 'Verification failed. Please check the code or your backend connection.';
+      setOtpError(errMsg);
+    } finally {
+      setOtpLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,6 +121,11 @@ export default function Register() {
 
     if (password !== confirmPassword) {
       alert('Passwords do not match');
+      return;
+    }
+
+    if (!isOtpVerified) {
+      alert('Please verify your email address with OTP first.');
       return;
     }
 
@@ -94,18 +189,43 @@ export default function Register() {
               onChange={(e) => setName(e.target.value)}
               sx={{ mb: 2 }}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              sx={{ mb: 2 }}
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1, width: '100%' }}>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                value={email}
+                disabled={isOtpVerified}
+                onChange={(e) => setEmail(e.target.value)}
+                InputProps={{
+                  endAdornment: isOtpVerified ? (
+                    <InputAdornment position="end">
+                      <CheckCircleIcon color="success" />
+                    </InputAdornment>
+                  ) : null,
+                }}
+                sx={{ flexGrow: 1 }}
+              />
+              <Button
+                variant={isOtpVerified ? "contained" : "outlined"}
+                color={isOtpVerified ? "success" : "primary"}
+                onClick={handleSendOtp}
+                disabled={isOtpVerified || !email}
+                sx={{ 
+                  height: '56px', 
+                  minWidth: '120px',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  borderRadius: 2,
+                  boxShadow: isOtpVerified ? '0 4px 12px 0 rgba(46, 125, 50, 0.2)' : 'none'
+                }}
+              >
+                {isOtpVerified ? 'Verified' : 'Verify OTP'}
+              </Button>
+            </Box>
             
             <TextField
               margin="normal"
@@ -140,17 +260,17 @@ export default function Register() {
               variant="contained"
               color="primary"
               size="large"
-              disabled={loading}
+              disabled={loading || !isOtpVerified}
               sx={{ 
                 py: 1.5, 
                 mb: 3, 
-                boxShadow: '0 4px 12px 0 rgba(79, 70, 229, 0.25)',
+                boxShadow: isOtpVerified ? '0 4px 12px 0 rgba(79, 70, 229, 0.25)' : 'none',
                 '&:hover': {
-                  boxShadow: '0 6px 16px 0 rgba(79, 70, 229, 0.35)',
+                  boxShadow: isOtpVerified ? '0 6px 16px 0 rgba(79, 70, 229, 0.35)' : 'none',
                 }
               }}
             >
-              {loading ? 'Creating Account...' : 'Sign Up'}
+              {loading ? 'Creating Account...' : isOtpVerified ? 'Sign Up' : 'Verify Email to Sign Up'}
             </Button>
 
             <Typography variant="body2" color="text.secondary">
@@ -162,6 +282,105 @@ export default function Register() {
           </Box>
         </CardContent>
       </Card>
+
+      {/* OTP Verification Modal */}
+      <Dialog 
+        open={otpModalOpen} 
+        onClose={() => setOtpModalOpen(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            p: 1.5,
+            width: '100%',
+            maxWidth: '400px'
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 800, pb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          Verify Your Email
+          <IconButton onClick={() => setOtpModalOpen(false)} size="small">
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 3, fontSize: '0.875rem' }}>
+            We've sent a 6-digit verification code to <strong>{email || 'your email'}</strong>. Please enter it below.
+          </DialogContentText>
+
+          {otpError && (
+            <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+              {otpError}
+            </Alert>
+          )}
+
+          <TextField
+            autoFocus
+            required
+            fullWidth
+            label="Verification Code"
+            variant="outlined"
+            placeholder="123456"
+            value={otpCode}
+            onChange={(e) => {
+              const val = e.target.value.replace(/\D/g, ''); // only allow digits
+              if (val.length <= 6) setOtpCode(val);
+            }}
+            slotProps={{
+              htmlInput: {
+                maxLength: 6,
+                style: { 
+                  textAlign: 'center', 
+                  fontSize: '1.5rem', 
+                  letterSpacing: '0.5rem', 
+                  fontFamily: 'monospace',
+                  fontWeight: 'bold'
+                }
+              }
+            }}
+            sx={{ mb: 2 }}
+          />
+
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1, mb: 1 }}>
+            {resendCountdown > 0 ? (
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+                Resend code in {resendCountdown}s
+              </Typography>
+            ) : (
+              <Button 
+                variant="text" 
+                size="small" 
+                onClick={handleSendOtp} 
+                disabled={otpLoading}
+                sx={{ textTransform: 'none', fontWeight: 600 }}
+              >
+                Resend OTP
+              </Button>
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button 
+            onClick={() => setOtpModalOpen(false)} 
+            color="inherit" 
+            sx={{ fontWeight: 600, textTransform: 'none' }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleVerifyOtp}
+            variant="contained"
+            disabled={otpLoading || otpCode.length !== 6}
+            sx={{ 
+              fontWeight: 600, 
+              textTransform: 'none',
+              px: 3,
+              boxShadow: '0 4px 12px 0 rgba(79, 70, 229, 0.25)',
+            }}
+          >
+            {otpLoading ? <CircularProgress size={24} color="inherit" /> : 'Verify'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
