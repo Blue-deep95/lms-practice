@@ -37,7 +37,7 @@ export default function Login() {
         localStorage.setItem('token', response.data.accessToken);
         loginUser(response.data.user);
         alert('Login successful!');
-        navigate('/student-dashboard');
+        navigate('/dashboard');
       }
     } catch (err) {
       const errMsg = err.response?.data?.message || 'Login failed';
@@ -49,31 +49,53 @@ export default function Login() {
 
   return (
     <Container maxWidth="xs" sx={{ py: 10 }}>
-      <Card elevation={0} sx={{ border: '1px solid #e2e8f0', borderRadius: 4 }}>
-        <CardContent sx={{ p: 4, textAlign: 'center' }}>
-          {/* Logo */}
+      <Card 
+        elevation={0} 
+        sx={{ 
+          border: '1px solid #dadce0', 
+          borderRadius: '24px',
+          bgcolor: '#fafafc',
+          boxShadow: 'rgba(0, 0, 0, 0.08) 0px 4px 16px -8px'
+        }}
+      >
+        <CardContent sx={{ p: 5, textAlign: 'center' }}>
+          {/* Logo Badge */}
           <Box 
             sx={{ 
-              width: 50, 
-              height: 50, 
-              borderRadius: 2.5, 
-              bgcolor: 'primary.main', 
-              color: 'white', 
+              width: 48, 
+              height: 48, 
+              borderRadius: '12px', 
+              bgcolor: '#161637', // Midnight Ink
+              color: '#fafafc', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
               mx: 'auto', 
-              mb: 2,
-              boxShadow: '0 8px 16px -4px rgba(79, 70, 229, 0.3)'
+              mb: 3,
             }}
           >
-            <SchoolIcon fontSize="medium" />
+            <SchoolIcon fontSize="small" />
           </Box>
 
-          <Typography variant="h5" sx={{ fontWeight: 800, mb: 1, color: 'text.primary' }}>
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              fontWeight: 700, 
+              mb: 1.5, 
+              color: '#161637',
+              letterSpacing: '-0.4px'
+            }}
+          >
             Welcome Back
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: '#666666', // Graphite
+              mb: 4,
+              letterSpacing: '-0.08px'
+            }}
+          >
             Enter your credentials to access your courses
           </Typography>
 
@@ -83,7 +105,7 @@ export default function Login() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              placeholder="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
@@ -96,7 +118,7 @@ export default function Login() {
               required
               fullWidth
               name="password"
-              label="Password"
+              placeholder="Password"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -106,7 +128,18 @@ export default function Login() {
             />
 
             <Box sx={{ mb: 3, display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
-              <Typography variant="body2" component={Link} to="/forgot-password" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 600 }}>
+              <Typography 
+                variant="body2" 
+                component={Link} 
+                to="/forgot-password" 
+                sx={{ 
+                  color: '#0085e4', // Sky Accent
+                  textDecoration: 'none', 
+                  fontWeight: 500,
+                  letterSpacing: '-0.08px',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
                 Forgot password?
               </Typography>
             </Box>
@@ -115,24 +148,29 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
-              size="large"
               disabled={loading}
               sx={{ 
-                py: 1.5, 
-                mb: 3, 
-                boxShadow: '0 4px 12px 0 rgba(79, 70, 229, 0.25)',
-                '&:hover': {
-                  boxShadow: '0 6px 16px 0 rgba(79, 70, 229, 0.35)',
-                }
+                py: 1.8, 
+                mb: 3,
               }}
             >
               {loading ? 'Signing In...' : 'Sign In'}
             </Button>
 
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: '#666666' }}>
               Don't have an account?{' '}
-              <Typography variant="body2" component={Link} to="/register" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 600 }}>
+              <Typography 
+                variant="body2" 
+                component={Link} 
+                to="/register" 
+                sx={{ 
+                  color: '#0085e4', // Sky Accent
+                  textDecoration: 'none', 
+                  fontWeight: 600,
+                  letterSpacing: '-0.08px',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
                 Sign Up
               </Typography>
             </Typography>

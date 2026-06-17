@@ -140,41 +140,63 @@ export default function ForgotPassword() {
 
   return (
     <Container maxWidth="xs" sx={{ py: 10 }}>
-      <Card elevation={0} sx={{ border: '1px solid #e2e8f0', borderRadius: 4 }}>
-        <CardContent sx={{ p: 4, textAlign: 'center' }}>
-          {/* Logo/Icon */}
+      <Card 
+        elevation={0} 
+        sx={{ 
+          border: '1px solid #dadce0', 
+          borderRadius: '24px',
+          bgcolor: '#fafafc',
+          boxShadow: 'rgba(0, 0, 0, 0.08) 0px 4px 16px -8px'
+        }}
+      >
+        <CardContent sx={{ p: 5, textAlign: 'center' }}>
+          {/* Logo Badge */}
           <Box 
             sx={{ 
-              width: 50, 
-              height: 50, 
-              borderRadius: 2.5, 
-              bgcolor: 'primary.main', 
-              color: 'white', 
+              width: 48, 
+              height: 48, 
+              borderRadius: '12px', 
+              bgcolor: '#161637', 
+              color: '#fafafc', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
               mx: 'auto', 
-              mb: 2,
-              boxShadow: '0 8px 16px -4px rgba(79, 70, 229, 0.3)'
+              mb: 3,
             }}
           >
-            <KeyIcon fontSize="medium" />
+            <KeyIcon fontSize="small" />
           </Box>
 
-          <Typography variant="h5" sx={{ fontWeight: 800, mb: 1, color: 'text.primary' }}>
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              fontWeight: 700, 
+              mb: 1.5, 
+              color: '#161637',
+              letterSpacing: '-0.4px'
+            }}
+          >
             {activeStep === 1 && 'Forgot Password'}
             {activeStep === 2 && 'Enter Code'}
             {activeStep === 3 && 'New Password'}
           </Typography>
           
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: '#666666', 
+              mb: 4,
+              letterSpacing: '-0.08px'
+            }}
+          >
             {activeStep === 1 && "Enter your email to receive a password reset OTP"}
             {activeStep === 2 && `We've sent a 6-digit verification code to ${email}`}
             {activeStep === 3 && "Set your new account password below"}
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ mb: 3, textAlign: 'left', borderRadius: 2 }}>
+            <Alert severity="error" sx={{ mb: 3, textAlign: 'left', borderRadius: '8px' }}>
               {error}
             </Alert>
           )}
@@ -187,7 +209,7 @@ export default function ForgotPassword() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                placeholder="Email Address"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -199,12 +221,10 @@ export default function ForgotPassword() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
-                size="large"
                 disabled={loading}
-                sx={{ py: 1.5, mb: 3 }}
+                sx={{ py: 1.8, mb: 3 }}
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : 'Send Reset Code'}
+                {loading ? <CircularProgress size={20} color="inherit" /> : 'Send Reset Code'}
               </Button>
             </Box>
           )}
@@ -217,13 +237,12 @@ export default function ForgotPassword() {
                 required
                 fullWidth
                 id="otpCode"
-                label="Verification Code"
-                placeholder="123456"
+                placeholder="Verification Code"
                 name="otpCode"
                 autoFocus
                 value={otpCode}
                 onChange={(e) => {
-                  const val = e.target.value.replace(/\D/g, ''); // digits only
+                  const val = e.target.value.replace(/\D/g, ''); 
                   if (val.length <= 6) setOtpCode(val);
                 }}
                 slotProps={{
@@ -234,7 +253,8 @@ export default function ForgotPassword() {
                       fontSize: '1.5rem', 
                       letterSpacing: '0.5rem', 
                       fontFamily: 'monospace',
-                      fontWeight: 'bold'
+                      fontWeight: 'bold',
+                      color: '#000000'
                     }
                   }
                 }}
@@ -243,7 +263,7 @@ export default function ForgotPassword() {
 
               <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                 {resendCountdown > 0 ? (
-                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  <Typography variant="caption" sx={{ color: '#666666', fontWeight: 500 }}>
                     Resend code in {resendCountdown}s
                   </Typography>
                 ) : (
@@ -252,7 +272,7 @@ export default function ForgotPassword() {
                     size="small" 
                     onClick={handleSendOtp}
                     disabled={loading}
-                    sx={{ textTransform: 'none', fontWeight: 600 }}
+                    sx={{ textTransform: 'none', fontWeight: 600, p: 0, minWidth: 'auto' }}
                   >
                     Resend Code
                   </Button>
@@ -263,12 +283,10 @@ export default function ForgotPassword() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
-                size="large"
                 disabled={loading || otpCode.length !== 6}
-                sx={{ py: 1.5, mb: 3 }}
+                sx={{ py: 1.8, mb: 3 }}
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : 'Verify Code'}
+                {loading ? <CircularProgress size={20} color="inherit" /> : 'Verify Code'}
               </Button>
             </Box>
           )}
@@ -281,7 +299,7 @@ export default function ForgotPassword() {
                 required
                 fullWidth
                 name="password"
-                label="New Password"
+                placeholder="New Password"
                 type="password"
                 id="password"
                 autoFocus
@@ -294,7 +312,7 @@ export default function ForgotPassword() {
                 required
                 fullWidth
                 name="confirmPassword"
-                label="Confirm New Password"
+                placeholder="Confirm New Password"
                 type="password"
                 id="confirmPassword"
                 value={confirmPassword}
@@ -305,12 +323,10 @@ export default function ForgotPassword() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
-                size="large"
                 disabled={loading}
-                sx={{ py: 1.5, mb: 3 }}
+                sx={{ py: 1.8, mb: 3 }}
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : 'Reset Password'}
+                {loading ? <CircularProgress size={20} color="inherit" /> : 'Reset Password'}
               </Button>
             </Box>
           )}
@@ -322,7 +338,13 @@ export default function ForgotPassword() {
               to="/login" 
               color="inherit" 
               startIcon={<ArrowBackIcon />}
-              sx={{ textTransform: 'none', fontWeight: 600, fontSize: '0.875rem' }}
+              sx={{ 
+                textTransform: 'none', 
+                fontWeight: 600, 
+                fontSize: '0.875rem',
+                color: '#666666',
+                '&:hover': { color: '#161637' }
+              }}
             >
               Back to Sign In
             </Button>

@@ -1,21 +1,20 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  // Load user from localStorage on application start
-  useEffect(() => {
+  // Lazily initialize user state from localStorage
+  const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
-      } catch (err) {
+        return JSON.parse(savedUser);
+      } catch {
         localStorage.removeItem('user');
       }
     }
-  }, []);
+    return null;
+  });
 
   // Set user state and save to localStorage
   const loginUser = (userData) => {
@@ -37,6 +36,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

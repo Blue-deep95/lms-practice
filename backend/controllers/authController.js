@@ -105,7 +105,7 @@ const refresh = async (req, res) => {
       }
 
       // Generate new access token
-      const accessToken = generateAccessToken(user._id);
+      const accessToken = generateAccessToken(user);
 
       res.status(200).json({
         success: true,

@@ -147,31 +147,53 @@ export default function Register() {
 
   return (
     <Container maxWidth="xs" sx={{ py: 8 }}>
-      <Card elevation={0} sx={{ border: '1px solid #e2e8f0', borderRadius: 4 }}>
-        <CardContent sx={{ p: 4, textAlign: 'center' }}>
-          {/* Logo */}
+      <Card 
+        elevation={0} 
+        sx={{ 
+          border: '1px solid #dadce0', 
+          borderRadius: '24px',
+          bgcolor: '#fafafc',
+          boxShadow: 'rgba(0, 0, 0, 0.08) 0px 4px 16px -8px'
+        }}
+      >
+        <CardContent sx={{ p: 5, textAlign: 'center' }}>
+          {/* Logo Badge */}
           <Box 
             sx={{ 
-              width: 50, 
-              height: 50, 
-              borderRadius: 2.5, 
-              bgcolor: 'primary.main', 
-              color: 'white', 
+              width: 48, 
+              height: 48, 
+              borderRadius: '12px', 
+              bgcolor: '#161637', 
+              color: '#fafafc', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
               mx: 'auto', 
-              mb: 2,
-              boxShadow: '0 8px 16px -4px rgba(79, 70, 229, 0.3)'
+              mb: 3,
             }}
           >
-            <SchoolIcon fontSize="medium" />
+            <SchoolIcon fontSize="small" />
           </Box>
 
-          <Typography variant="h5" sx={{ fontWeight: 800, mb: 1, color: 'text.primary' }}>
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              fontWeight: 700, 
+              mb: 1.5, 
+              color: '#161637',
+              letterSpacing: '-0.4px'
+            }}
+          >
             Create Account
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: '#666666', 
+              mb: 4,
+              letterSpacing: '-0.08px'
+            }}
+          >
             Join LearnSphere LMS today
           </Typography>
 
@@ -181,7 +203,7 @@ export default function Register() {
               required
               fullWidth
               id="name"
-              label="Full Name"
+              placeholder="Full Name"
               name="name"
               autoComplete="name"
               autoFocus
@@ -189,12 +211,12 @@ export default function Register() {
               onChange={(e) => setName(e.target.value)}
               sx={{ mb: 2 }}
             />
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1, width: '100%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mt: 1, mb: 1, width: '100%' }}>
               <TextField
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                placeholder="Email Address"
                 name="email"
                 autoComplete="email"
                 value={email}
@@ -211,16 +233,16 @@ export default function Register() {
               />
               <Button
                 variant={isOtpVerified ? "contained" : "outlined"}
-                color={isOtpVerified ? "success" : "primary"}
                 onClick={handleSendOtp}
                 disabled={isOtpVerified || !email}
                 sx={{ 
-                  height: '56px', 
-                  minWidth: '120px',
+                  height: '48px', 
+                  minWidth: '100px',
                   fontWeight: 600,
-                  textTransform: 'none',
-                  borderRadius: 2,
-                  boxShadow: isOtpVerified ? '0 4px 12px 0 rgba(46, 125, 50, 0.2)' : 'none'
+                  borderRadius: '8px',
+                  whiteSpace: 'nowrap',
+                  fontSize: '14px',
+                  p: '0 16px',
                 }}
               >
                 {isOtpVerified ? 'Verified' : 'Verify OTP'}
@@ -232,7 +254,7 @@ export default function Register() {
               required
               fullWidth
               name="password"
-              label="Password"
+              placeholder="Password"
               type="password"
               id="password"
               autoComplete="new-password"
@@ -245,7 +267,7 @@ export default function Register() {
               required
               fullWidth
               name="confirmPassword"
-              label="Confirm Password"
+              placeholder="Confirm Password"
               type="password"
               id="confirmPassword"
               autoComplete="new-password"
@@ -258,24 +280,29 @@ export default function Register() {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
-              size="large"
               disabled={loading || !isOtpVerified}
               sx={{ 
-                py: 1.5, 
+                py: 1.8, 
                 mb: 3, 
-                boxShadow: isOtpVerified ? '0 4px 12px 0 rgba(79, 70, 229, 0.25)' : 'none',
-                '&:hover': {
-                  boxShadow: isOtpVerified ? '0 6px 16px 0 rgba(79, 70, 229, 0.35)' : 'none',
-                }
               }}
             >
               {loading ? 'Creating Account...' : isOtpVerified ? 'Sign Up' : 'Verify Email to Sign Up'}
             </Button>
 
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: '#666666' }}>
               Already have an account?{' '}
-              <Typography variant="body2" component={Link} to="/login" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 600 }}>
+              <Typography 
+                variant="body2" 
+                component={Link} 
+                to="/login" 
+                sx={{ 
+                  color: '#0085e4', 
+                  textDecoration: 'none', 
+                  fontWeight: 600,
+                  letterSpacing: '-0.08px',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
                 Sign In
               </Typography>
             </Typography>
@@ -289,26 +316,29 @@ export default function Register() {
         onClose={() => setOtpModalOpen(false)}
         PaperProps={{
           sx: {
-            borderRadius: 3,
-            p: 1.5,
+            borderRadius: '24px',
+            border: '1px solid #dadce0',
+            p: 2,
             width: '100%',
-            maxWidth: '400px'
+            maxWidth: '400px',
+            bgcolor: '#fafafc',
+            boxShadow: 'rgba(0, 0, 0, 0.08) 0px 8px 20px -7px'
           }
         }}
       >
-        <DialogTitle sx={{ fontWeight: 800, pb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <DialogTitle sx={{ fontWeight: 700, fontSize: '1.25rem', color: '#161637', pb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           Verify Your Email
-          <IconButton onClick={() => setOtpModalOpen(false)} size="small">
-            <CloseIcon />
+          <IconButton onClick={() => setOtpModalOpen(false)} size="small" sx={{ color: '#666666' }}>
+            <CloseIcon fontSize="small" />
           </IconButton>
         </DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ mb: 3, fontSize: '0.875rem' }}>
+        <DialogContent sx={{ pb: 1 }}>
+          <DialogContentText sx={{ mb: 3, fontSize: '14px', color: '#666666', lineHeight: 1.57 }}>
             We've sent a 6-digit verification code to <strong>{email || 'your email'}</strong>. Please enter it below.
           </DialogContentText>
 
           {otpError && (
-            <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+            <Alert severity="error" sx={{ mb: 3, borderRadius: '8px' }}>
               {otpError}
             </Alert>
           )}
@@ -317,12 +347,11 @@ export default function Register() {
             autoFocus
             required
             fullWidth
-            label="Verification Code"
             variant="outlined"
-            placeholder="123456"
+            placeholder="Verification Code"
             value={otpCode}
             onChange={(e) => {
-              const val = e.target.value.replace(/\D/g, ''); // only allow digits
+              const val = e.target.value.replace(/\D/g, ''); 
               if (val.length <= 6) setOtpCode(val);
             }}
             slotProps={{
@@ -333,7 +362,8 @@ export default function Register() {
                   fontSize: '1.5rem', 
                   letterSpacing: '0.5rem', 
                   fontFamily: 'monospace',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
+                  color: '#000000'
                 }
               }
             }}
@@ -342,7 +372,7 @@ export default function Register() {
 
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1, mb: 1 }}>
             {resendCountdown > 0 ? (
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+              <Typography variant="caption" sx={{ color: '#666666', fontWeight: 500 }}>
                 Resend code in {resendCountdown}s
               </Typography>
             ) : (
@@ -351,18 +381,17 @@ export default function Register() {
                 size="small" 
                 onClick={handleSendOtp} 
                 disabled={otpLoading}
-                sx={{ textTransform: 'none', fontWeight: 600 }}
+                sx={{ textTransform: 'none', fontWeight: 600, p: 0, minWidth: 'auto' }}
               >
                 Resend OTP
               </Button>
             )}
           </Box>
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
+        <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>
           <Button 
             onClick={() => setOtpModalOpen(false)} 
-            color="inherit" 
-            sx={{ fontWeight: 600, textTransform: 'none' }}
+            sx={{ fontWeight: 600, color: '#666666', textTransform: 'none' }}
           >
             Cancel
           </Button>
@@ -374,10 +403,10 @@ export default function Register() {
               fontWeight: 600, 
               textTransform: 'none',
               px: 3,
-              boxShadow: '0 4px 12px 0 rgba(79, 70, 229, 0.25)',
+              borderRadius: '12px'
             }}
           >
-            {otpLoading ? <CircularProgress size={24} color="inherit" /> : 'Verify'}
+            {otpLoading ? <CircularProgress size={20} color="inherit" /> : 'Verify'}
           </Button>
         </DialogActions>
       </Dialog>

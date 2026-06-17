@@ -8,6 +8,10 @@ const userSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    name: {
+      type: String,
+      trim: true,
+    },
     email: {
       type: String,
       required: [true, 'Please add an email'],
@@ -23,6 +27,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['student', 'trainer', 'admin'],
       default: 'student',
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+    },
+    profileImage: {
+      type: String,
+      default: '',
     },
   },
   {

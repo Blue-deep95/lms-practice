@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-// Generate Access Token (short expiration, e.g., 15m)
-const generateAccessToken = (userId) => {
+// Generate Access Token (short expiration, e.g., 15m) containing ID, Email, and Role
+const generateAccessToken = (user) => {
   return jwt.sign(
-    { id: userId },
+    { id: user._id, email: user.email, role: user.role },
     process.env.JWT_ACCESS_SECRET,
     { expiresIn: '15m' }
   );
@@ -20,7 +20,7 @@ const generateRefreshToken = (userId, role) => {
 
 // Centralized helper to set refresh token cookie and send response with user info and access token
 const sendAuthResponse = (user, statusCode, res) => {
-  const accessToken = generateAccessToken(user._id);
+  const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user._id, user.role);
 
   // Cookie options
