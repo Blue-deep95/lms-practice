@@ -1,34 +1,12 @@
-import { useState, useEffect } from 'react';
 import { Box, Typography, Grid, Card, CardContent, CircularProgress, Alert } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import SchoolIcon from '@mui/icons-material/School';
 import BookIcon from '@mui/icons-material/Book';
 import TopicIcon from '@mui/icons-material/Assignment';
-import API from '../../api/api';
+import useCustomFetch from '../../hooks/useCustomFetch';
 
 export default function AdminOverview() {
-  const [metrics, setMetrics] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        const response = await API.get('/admin/metrics');
-        if (response.data.success) {
-          setMetrics(response.data.data);
-        }
-      } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch platform metrics.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMetrics();
-  }, []);
+  const { data: metrics, loading, error } = useCustomFetch('/admin/metrics');
 
   if (loading) {
     return (

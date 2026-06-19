@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -28,12 +28,33 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import API from '../../api/api';
+import useCustomFetch from '../../hooks/useCustomFetch';
 
 export default function AdminCourses() {
-  const [courses, setCourses] = useState([]);
-  const [trainers, setTrainers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const {
+    data: coursesData,
+    loading: coursesLoading,
+    error: coursesError,
+    refetch: fetchCourses,
+    setData: setCourses,
+  } = useCustomFetch('/courses');
+
+  const {
+    data: trainersData,
+    loading: trainersLoading,
+    error: trainersError,
+    refetch: fetchTrainers,
+  } = useCustomFetch('/admin/trainers');
+
+  const courses = coursesData || [];
+  const trainers = trainersData ? trainersData.filter(t => t.status === 'active') : [];
+  const loading = coursesLoading || trainersLoading;
+  const error = coursesError || trainersError;
+
+  const fetchData = async () => {
+    fetchCourses();
+    fetchTrainers();
+  };
 
   // Course Dialog states
   const [courseModalOpen, setCourseModalOpen] = useState(false);
@@ -51,44 +72,6 @@ export default function AdminCourses() {
   const [assigningCourse, setAssigningCourse] = useState(null);
   const [selectedTrainerId, setSelectedTrainerId] = useState('');
   const [assignSubmitLoading, setAssignSubmitLoading] = useState(false);
-
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      // Load both courses and trainers in parallel
-      const [coursesRes, trainersRes] = await Promise.all([
-        API.get('/courses'),
-        API.get('/admin/trainers'),
-      ]);
-
-      if (coursesRes.data.success) {
-        setCourses(coursesRes.data.data);
-      }
-      if (trainersRes.data.success) {
-        // Only allow assigning to active trainers
-        setTrainers(trainersRes.data.data.filter(t => t.status === 'active'));
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch course dashboard data.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      await Promise.resolve();
-      if (active) {
-        fetchData();
-      }
-    };
-    load();
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const handleOpenAddCourse = () => {
     setEditingCourse(null);
@@ -234,12 +217,10 @@ export default function AdminCourses() {
           <Table>
             <TableHead sx={{ bgcolor: '#f0f0f2' }}>
               <TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 700, color: '#161637' }}>Course Title</TableCell>
-                  <TableCell sx={{ fontWeight: 700, color: '#161637' }}>Category</TableCell>
-                  <TableCell sx={{ fontWeight: 700, color: '#161637' }}>Trainer Assigned</TableCell>
-                  <TableCell sx={{ fontWeight: 700, color: '#161637', textAlign: 'right' }}>Actions</TableCell>
-                </TableRow>
+                <TableCell sx={{ fontWeight: 700, color: '#161637' }}>Course Title</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#161637' }}>Category</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#161637' }}>Trainer Assigned</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#161637', textAlign: 'right' }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -27,11 +27,18 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import API from '../../api/api';
+import useCustomFetch from '../../hooks/useCustomFetch';
 
 export default function AdminTrainers() {
-  const [trainers, setTrainers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const {
+    data: trainersData,
+    loading,
+    error,
+    refetch: fetchTrainers,
+    setData: setTrainers,
+  } = useCustomFetch('/admin/trainers');
+
+  const trainers = trainersData || [];
 
   // Dialog states
   const [modalOpen, setModalOpen] = useState(false);
@@ -41,35 +48,6 @@ export default function AdminTrainers() {
   const [password, setPassword] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
-
-  const fetchTrainers = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      const response = await API.get('/admin/trainers');
-      if (response.data.success) {
-        setTrainers(response.data.data);
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch trainers.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      await Promise.resolve();
-      if (active) {
-        fetchTrainers();
-      }
-    };
-    load();
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const handleOpenAdd = () => {
     setEditingTrainer(null);

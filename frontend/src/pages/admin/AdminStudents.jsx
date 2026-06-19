@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -27,11 +27,18 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import API from '../../api/api';
+import useCustomFetch from '../../hooks/useCustomFetch';
 
 export default function AdminStudents() {
-  const [students, setStudents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const {
+    data: studentsData,
+    loading,
+    error,
+    refetch: fetchStudents,
+    setData: setStudents,
+  } = useCustomFetch('/admin/students');
+
+  const students = studentsData || [];
 
   // Dialog states
   const [modalOpen, setModalOpen] = useState(false);
@@ -41,35 +48,6 @@ export default function AdminStudents() {
   const [password, setPassword] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
-
-  const fetchStudents = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      const response = await API.get('/admin/students');
-      if (response.data.success) {
-        setStudents(response.data.data);
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch students.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      await Promise.resolve();
-      if (active) {
-        fetchStudents();
-      }
-    };
-    load();
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const handleOpenAdd = () => {
     setEditingStudent(null);
