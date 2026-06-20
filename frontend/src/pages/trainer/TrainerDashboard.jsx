@@ -19,6 +19,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
+import BookIcon from '@mui/icons-material/Book';
+import PeopleIcon from '@mui/icons-material/People';
 import { useAuth } from '../../context/AuthContext';
 
 export default function TrainerDashboard() {
@@ -48,6 +50,8 @@ export default function TrainerDashboard() {
 
   const menuItems = [
     { text: 'Overview', path: '/dashboard/trainer', icon: <DashboardIcon />, exact: true },
+    { text: 'My Courses', path: '/dashboard/trainer/courses', icon: <BookIcon /> },
+    { text: 'Students', path: '/dashboard/trainer/students', icon: <PeopleIcon /> },
   ];
 
   const renderSidebarContent = () => (

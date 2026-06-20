@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const {
   getMetrics,
   getTrainers,
@@ -17,31 +17,23 @@ const {
 
 // All routes require authentication and admin role
 router.use(protect);
-router.use(adminOnly);
+router.use(authorizeRoles('admin'));
 
 // Metrics endpoint
-router.get('/metrics', getMetrics);
+router.get('/get-metrics', getMetrics);
 
 // Trainers endpoints
-router.route('/trainers')
-  .get(getTrainers)
-  .post(addTrainer);
-
-router.route('/trainers/:id')
-  .put(updateTrainer)
-  .delete(deleteTrainer);
-
-router.put('/trainers/:id/status', toggleTrainerStatus);
+router.get('/get-trainers', getTrainers);
+router.post('/add-trainer', addTrainer);
+router.put('/update-trainer/:id', updateTrainer);
+router.delete('/delete-trainer/:id', deleteTrainer);
+router.put('/toggle-trainer-status/:id', toggleTrainerStatus);
 
 // Students endpoints
-router.route('/students')
-  .get(getStudents)
-  .post(addStudent);
-
-router.route('/students/:id')
-  .put(updateStudent)
-  .delete(deleteStudent);
-
-router.put('/students/:id/status', toggleStudentStatus);
+router.get('/get-students', getStudents);
+router.post('/add-student', addStudent);
+router.put('/update-student/:id', updateStudent);
+router.delete('/delete-student/:id', deleteStudent);
+router.put('/toggle-student-status/:id', toggleStudentStatus);
 
 module.exports = router;

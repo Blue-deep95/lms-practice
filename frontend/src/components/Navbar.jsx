@@ -131,7 +131,7 @@ export default function Navbar() {
                 }}
               >
                 {user ? [
-                  <MenuItem key="user" disabled sx={{ opacity: '1 !important', color: '#161637', fontWeight: 600 }}>
+                  <MenuItem key="user" component={Link} to="/profile" onClick={handleMenuClose} sx={{ color: '#161637', fontWeight: 600 }}>
                     Hi, {user.username}
                   </MenuItem>,
                   <Divider key="div1" sx={{ borderColor: '#dadce0', my: 1 }} />,
@@ -155,8 +155,19 @@ export default function Navbar() {
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               {user ? (
                 <>
-                  <Typography variant="body2" sx={{ color: '#666666', fontSize: '14px', letterSpacing: '-0.08px' }}>
-                    Hello, <span style={{ fontWeight: 600, color: '#161637' }}>{user.username}</span>
+                  <Typography 
+                    component={Link} 
+                    to="/profile" 
+                    variant="body2" 
+                    sx={{ 
+                      color: '#666666', 
+                      fontSize: '14px', 
+                      letterSpacing: '-0.08px', 
+                      textDecoration: 'none', 
+                      '&:hover span': { color: '#0085e4' } 
+                    }}
+                  >
+                    Hello, <span style={{ fontWeight: 600, color: '#161637', transition: 'color 0.2s' }}>{user.username}</span>
                   </Typography>
                   <Button 
                     variant="outlined" 

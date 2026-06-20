@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const {
   getCourses,
   createCourse,
@@ -12,14 +12,10 @@ const {
 // All routes require authentication
 router.use(protect);
 
-router.route('/')
-  .get(getCourses)
-  .post(createCourse);
-
-router.route('/:id')
-  .put(updateCourse)
-  .delete(deleteCourse);
-
-router.put('/:id/assign', assignTrainer);
+router.get('/get-courses', getCourses);
+router.post('/create-course', authorizeRoles('trainer', 'admin'), createCourse);
+router.put('/update-course/:id', authorizeRoles('trainer', 'admin'), updateCourse);
+router.delete('/delete-course/:id', authorizeRoles('trainer', 'admin'), deleteCourse);
+router.put('/assign-trainer/:id', authorizeRoles('admin'), assignTrainer);
 
 module.exports = router;

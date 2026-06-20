@@ -37,14 +37,14 @@ export default function AdminCourses() {
     error: coursesError,
     refetch: fetchCourses,
     setData: setCourses,
-  } = useCustomFetch('/courses');
+  } = useCustomFetch('/courses/get-courses');
 
   const {
     data: trainersData,
     loading: trainersLoading,
     error: trainersError,
     refetch: fetchTrainers,
-  } = useCustomFetch('/admin/trainers');
+  } = useCustomFetch('/admin/get-trainers');
 
   const courses = coursesData || [];
   const trainers = trainersData ? trainersData.filter(t => t.status === 'active') : [];
@@ -126,14 +126,14 @@ export default function AdminCourses() {
 
     try {
       if (editingCourse) {
-        const response = await API.put(`/courses/${editingCourse._id}`, payload);
+        const response = await API.put(`/courses/update-course/${editingCourse._id}`, payload);
         if (response.data.success) {
           alert('Course updated successfully!');
           fetchData();
           handleCloseCourseModal();
         }
       } else {
-        const response = await API.post('/courses', payload);
+        const response = await API.post('/courses/create-course', payload);
         if (response.data.success) {
           alert('Course created successfully!');
           fetchData();
@@ -152,7 +152,7 @@ export default function AdminCourses() {
     setAssignSubmitLoading(true);
 
     try {
-      const response = await API.put(`/courses/${assigningCourse._id}/assign`, {
+      const response = await API.put(`/courses/assign-trainer/${assigningCourse._id}`, {
         trainerId: selectedTrainerId || null,
       });
 
@@ -171,7 +171,7 @@ export default function AdminCourses() {
   const handleDeleteCourse = async (id) => {
     if (!window.confirm('Are you sure you want to delete this course? All topics and student enrollments will be permanently deleted.')) return;
     try {
-      const response = await API.delete(`/courses/${id}`);
+      const response = await API.delete(`/courses/delete-course/${id}`);
       if (response.data.success) {
         alert('Course deleted successfully');
         setCourses(courses.filter(c => c._id !== id));

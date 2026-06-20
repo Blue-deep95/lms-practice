@@ -12,6 +12,7 @@ import LandingPage from './pages/common/LandingPage';
 import Login from './pages/common/Login';
 import Register from './pages/common/Register';
 import ForgotPassword from './pages/common/ForgotPassword';
+import Profile from './pages/common/Profile';
 import StudentDashboard from './pages/student/StudentDashboard';
 import TrainerDashboard from './pages/trainer/TrainerDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -21,6 +22,9 @@ import AdminTrainers from './pages/admin/AdminTrainers';
 import AdminStudents from './pages/admin/AdminStudents';
 import AdminCourses from './pages/admin/AdminCourses';
 import TrainerOverview from './pages/trainer/TrainerOverview';
+import TrainerCourses from './pages/trainer/TrainerCourses';
+import TrainerTopics from './pages/trainer/TrainerTopics';
+import TrainerStudents from './pages/trainer/TrainerStudents';
 import StudentOverview from './pages/student/StudentOverview';
 import { AuthProvider } from './context/AuthContext';
 
@@ -42,6 +46,7 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/profile" element={<Profile />} />
                 
                 {/* Unified Dashboard Nested Layout and Sub-Routes */}
                 <Route path="/dashboard" element={<DashboardDispatcher />}>
@@ -56,6 +61,9 @@ export default function App() {
                   {/* Trainer dashboard nested layouts */}
                   <Route path="trainer" element={<TrainerDashboard />}>
                     <Route index element={<TrainerOverview />} />
+                    <Route path="courses" element={<TrainerCourses />} />
+                    <Route path="courses/:courseId/topics" element={<TrainerTopics />} />
+                    <Route path="students" element={<TrainerStudents />} />
                   </Route>
                   
                   {/* Student dashboard nested layouts */}

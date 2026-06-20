@@ -48,7 +48,25 @@ const adminOnly = (req, res, next) => {
   }
 };
 
+// Universal role authorizer middleware
+const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: 'Not authorized, no user session found' });
+    }
+    if (allowedRoles.includes(req.user.role)) {
+      next();
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: `Forbidden: Access restricted to roles [${allowedRoles.join(', ')}]`,
+      });
+    }
+  };
+};
+
 module.exports = {
   protect,
   adminOnly,
+  authorizeRoles,
 };

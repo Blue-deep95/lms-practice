@@ -38,10 +38,6 @@ const createCourse = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide course title and description' });
     }
 
-    if (req.user.role !== 'admin' && req.user.role !== 'trainer') {
-      return res.status(403).json({ success: false, message: 'Not authorized to create courses' });
-    }
-
     // Set trainerId. If admin, can optionally assign trainerId. If trainer, it is self.
     let assignedTrainerId = null;
     if (req.user.role === 'trainer') {
@@ -83,10 +79,6 @@ const updateCourse = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized to edit this course' });
     }
 
-    if (req.user.role !== 'admin' && req.user.role !== 'trainer') {
-      return res.status(403).json({ success: false, message: 'Not authorized to edit courses' });
-    }
-
     if (title) course.title = title;
     if (description) course.description = description;
     if (thumbnail !== undefined) course.thumbnail = thumbnail;
@@ -123,10 +115,6 @@ const deleteCourse = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized to delete this course' });
     }
 
-    if (req.user.role !== 'admin' && req.user.role !== 'trainer') {
-      return res.status(403).json({ success: false, message: 'Not authorized to delete courses' });
-    }
-
     await Course.findByIdAndDelete(req.params.id);
 
     // Delete associated topics
@@ -148,10 +136,6 @@ const deleteCourse = async (req, res) => {
 const assignTrainer = async (req, res) => {
   try {
     const { trainerId } = req.body;
-
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ success: false, message: 'Not authorized. Admin only.' });
-    }
 
     const course = await Course.findById(req.params.id);
     if (!course) {

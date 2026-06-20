@@ -6,7 +6,7 @@ import TopicIcon from '@mui/icons-material/Assignment';
 import useCustomFetch from '../../hooks/useCustomFetch';
 
 export default function AdminOverview() {
-  const { data: metrics, loading, error } = useCustomFetch('/admin/metrics');
+  const { data: metrics, loading, error } = useCustomFetch('/admin/get-metrics');
 
   if (loading) {
     return (

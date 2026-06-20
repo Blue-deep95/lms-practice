@@ -6,6 +6,8 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const trainerRoutes = require('./routes/trainerRoutes');
+const topicRoutes = require('./routes/topicRoutes');
 
 // Load env variables
 dotenv.config();
@@ -28,6 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/trainer', trainerRoutes);
+app.use('/api/topics', topicRoutes);
 
 
 // Base route

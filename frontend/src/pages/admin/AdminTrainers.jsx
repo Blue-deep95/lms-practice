@@ -36,7 +36,7 @@ export default function AdminTrainers() {
     error,
     refetch: fetchTrainers,
     setData: setTrainers,
-  } = useCustomFetch('/admin/trainers');
+  } = useCustomFetch('/admin/get-trainers');
 
   const trainers = trainersData || [];
 
@@ -81,7 +81,7 @@ export default function AdminTrainers() {
     try {
       if (editingTrainer) {
         // Edit Trainer
-        const response = await API.put(`/admin/trainers/${editingTrainer._id}`, { name, email });
+        const response = await API.put(`/admin/update-trainer/${editingTrainer._id}`, { name, email });
         if (response.data.success) {
           alert('Trainer updated successfully!');
           fetchTrainers();
@@ -89,7 +89,7 @@ export default function AdminTrainers() {
         }
       } else {
         // Add Trainer
-        const response = await API.post('/admin/trainers', { name, email, password });
+        const response = await API.post('/admin/add-trainer', { name, email, password });
         if (response.data.success) {
           alert(`Trainer added successfully!\nEmail: ${email}\nGenerated Password: ${password}`);
           fetchTrainers();
@@ -106,7 +106,7 @@ export default function AdminTrainers() {
   const handleToggleStatus = async (id) => {
     if (!window.confirm('Are you sure you want to change this trainer\'s active status?')) return;
     try {
-      const response = await API.put(`/admin/trainers/${id}/status`);
+      const response = await API.put(`/admin/toggle-trainer-status/${id}`);
       if (response.data.success) {
         setTrainers(trainers.map(t => t._id === id ? { ...t, status: response.data.data.status } : t));
       }
@@ -118,7 +118,7 @@ export default function AdminTrainers() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this trainer? All their courses will be unassigned.')) return;
     try {
-      const response = await API.delete(`/admin/trainers/${id}`);
+      const response = await API.delete(`/admin/delete-trainer/${id}`);
       if (response.data.success) {
         alert('Trainer deleted successfully');
         setTrainers(trainers.filter(t => t._id !== id));

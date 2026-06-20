@@ -36,7 +36,7 @@ export default function AdminStudents() {
     error,
     refetch: fetchStudents,
     setData: setStudents,
-  } = useCustomFetch('/admin/students');
+  } = useCustomFetch('/admin/get-students');
 
   const students = studentsData || [];
 
@@ -81,7 +81,7 @@ export default function AdminStudents() {
     try {
       if (editingStudent) {
         // Edit Student
-        const response = await API.put(`/admin/students/${editingStudent._id}`, { name, email });
+        const response = await API.put(`/admin/update-student/${editingStudent._id}`, { name, email });
         if (response.data.success) {
           alert('Student updated successfully!');
           fetchStudents();
@@ -89,7 +89,7 @@ export default function AdminStudents() {
         }
       } else {
         // Add Student
-        const response = await API.post('/admin/students', { name, email, password });
+        const response = await API.post('/admin/add-student', { name, email, password });
         if (response.data.success) {
           alert(`Student added successfully!\nEmail: ${email}\nGenerated Password: ${password}`);
           fetchStudents();
@@ -106,7 +106,7 @@ export default function AdminStudents() {
   const handleToggleStatus = async (id) => {
     if (!window.confirm('Are you sure you want to toggle this student\'s active status?')) return;
     try {
-      const response = await API.put(`/admin/students/${id}/status`);
+      const response = await API.put(`/admin/toggle-student-status/${id}`);
       if (response.data.success) {
         setStudents(students.map(s => s._id === id ? { ...s, status: response.data.data.status } : s));
       }
@@ -118,7 +118,7 @@ export default function AdminStudents() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this student? All their enrollments will be wiped.')) return;
     try {
-      const response = await API.delete(`/admin/students/${id}`);
+      const response = await API.delete(`/admin/delete-student/${id}`);
       if (response.data.success) {
         alert('Student deleted successfully');
         setStudents(students.filter(s => s._id !== id));
