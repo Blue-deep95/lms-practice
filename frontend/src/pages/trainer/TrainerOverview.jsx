@@ -46,7 +46,7 @@ export default function TrainerOverview() {
       {/* Metrics Cards */}
       <Grid container spacing={4} sx={{ mb: 6 }}>
         {cards.map((card) => (
-          <Grid item xs={12} sm={6} md={4} key={card.title}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={card.title}>
             <Card
               elevation={0}
               sx={{
@@ -93,7 +93,7 @@ export default function TrainerOverview() {
 
         <Grid container spacing={4}>
           {/* Courses Action Card */}
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card
               elevation={0}
               sx={{
@@ -111,7 +111,7 @@ export default function TrainerOverview() {
                   Course Builder & Topics
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#666666', mb: 3, lineHeight: 1.6 }}>
-                  Create and update courses, upload syllabus outlines, and add/reorder topics with embedded YouTube video lectures.
+                  Create and update courses, upload syllabus outlines, and add/reorder topics with embedded YouTube or Google Drive video lectures.
                 </Typography>
                 <Button
                   variant="contained"
@@ -126,7 +126,7 @@ export default function TrainerOverview() {
           </Grid>
 
           {/* Students Action Card */}
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card
               elevation={0}
               sx={{

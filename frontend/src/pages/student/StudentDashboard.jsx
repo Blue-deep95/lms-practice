@@ -16,6 +16,8 @@ import {
   Drawer
 } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import ExploreIcon from '@mui/icons-material/Explore';
+import SchoolIcon from '@mui/icons-material/School';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -48,6 +50,8 @@ export default function StudentDashboard() {
 
   const menuItems = [
     { text: 'Overview', path: '/dashboard/student', icon: <DashboardIcon />, exact: true },
+    { text: 'Course Catalog', path: '/dashboard/student/catalog', icon: <ExploreIcon />, exact: false },
+    { text: 'My Courses', path: '/dashboard/student/courses', icon: <SchoolIcon />, exact: false },
   ];
 
   const renderSidebarContent = () => (

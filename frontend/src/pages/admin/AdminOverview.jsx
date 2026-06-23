@@ -44,7 +44,7 @@ export default function AdminOverview() {
 
       <Grid container spacing={4}>
         {cards.map((card) => (
-          <Grid item xs={12} sm={6} md={3} key={card.title}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={card.title}>
             <Card
               elevation={0}
               sx={{

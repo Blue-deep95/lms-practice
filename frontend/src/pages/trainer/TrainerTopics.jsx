@@ -31,12 +31,33 @@ import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
 import API from '../../api/api';
 import useCustomFetch from '../../hooks/useCustomFetch';
 
-// Helper to extract YouTube video ID and return embed URL
-const getYouTubeEmbedUrl = (url) => {
+// Helper to extract video ID and return embed URL (supports YouTube and Google Drive)
+const getVideoEmbedUrl = (url) => {
   if (!url) return '';
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  return match && match[2].length === 11 ? `https://www.youtube.com/embed/${match[2]}` : '';
+
+  // 1. YouTube extraction
+  const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const ytMatch = url.match(ytRegExp);
+  if (ytMatch && ytMatch[2].length === 11) {
+    return `https://www.youtube.com/embed/${ytMatch[2]}`;
+  }
+
+  // 2. Google Drive extraction
+  // Pattern A: /file/d/[FILE_ID]/...
+  const gdFileRegExp = /\/file\/d\/([a-zA-Z0-9_-]+)/;
+  const gdFileMatch = url.match(gdFileRegExp);
+  if (gdFileMatch && gdFileMatch[1]) {
+    return `https://drive.google.com/file/d/${gdFileMatch[1]}/preview`;
+  }
+
+  // Pattern B: open?id=[FILE_ID]
+  const gdOpenRegExp = /[?&]id=([a-zA-Z0-9_-]+)/;
+  const gdOpenMatch = url.match(gdOpenRegExp);
+  if (gdOpenMatch && gdOpenMatch[1]) {
+    return `https://drive.google.com/file/d/${gdOpenMatch[1]}/preview`;
+  }
+
+  return '';
 };
 
 export default function TrainerTopics() {
@@ -107,9 +128,9 @@ export default function TrainerTopics() {
     setSubmitLoading(true);
     setSubmitError('');
 
-    const embedTestUrl = getYouTubeEmbedUrl(videoUrl);
+    const embedTestUrl = getVideoEmbedUrl(videoUrl);
     if (videoUrl && !embedTestUrl) {
-      setSubmitError('Invalid YouTube video link. Please enter a valid watch or share link.');
+      setSubmitError('Invalid video link. Please enter a valid YouTube or Google Drive link.');
       setSubmitLoading(false);
       return;
     }
@@ -203,7 +224,7 @@ export default function TrainerTopics() {
   };
 
   const handleOpenPreview = (url) => {
-    setPreviewUrl(getYouTubeEmbedUrl(url));
+    setPreviewUrl(getVideoEmbedUrl(url));
     setPreviewOpen(true);
   };
 
@@ -427,15 +448,15 @@ export default function TrainerTopics() {
             <TextField
               margin="normal"
               fullWidth
-              placeholder="YouTube Video Link (e.g., https://youtu.be/...)"
+              placeholder="YouTube or Google Drive Video Link"
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
               sx={{ mb: 2 }}
-              helperText="Paste a YouTube watch link or share URL."
+              helperText="Paste a YouTube link (watch or share URL) or a Google Drive sharing link."
             />
 
             {/* Video Live Preview inside form */}
-            {videoUrl && getYouTubeEmbedUrl(videoUrl) && (
+            {videoUrl && getVideoEmbedUrl(videoUrl) && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="caption" sx={{ color: '#666666', display: 'block', mb: 1, fontWeight: 550 }}>
                   Video Preview:
@@ -443,8 +464,8 @@ export default function TrainerTopics() {
                 <iframe
                   width="100%"
                   height="200"
-                  src={getYouTubeEmbedUrl(videoUrl)}
-                  title="YouTube video player"
+                  src={getVideoEmbedUrl(videoUrl)}
+                  title="Video player"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
@@ -485,12 +506,12 @@ export default function TrainerTopics() {
           </IconButton>
         </Box>
         <DialogContent sx={{ p: 0, overflow: 'hidden' }}>
-          {previewUrl && (
+            {previewUrl && (
             <iframe
               width="100%"
               height="450"
               src={previewUrl}
-              title="YouTube video player"
+              title="Video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen

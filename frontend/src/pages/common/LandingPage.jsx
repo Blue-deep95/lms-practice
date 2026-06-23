@@ -8,8 +8,10 @@ import {
   Box,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LandingPage() {
+  const { user } = useAuth();
   const roles = [
     {
       title: "Students",
@@ -139,7 +141,7 @@ export default function LandingPage() {
           <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mb: 6 }}>
             <Button
               component={Link}
-              to="/register"
+              to={user ? "/dashboard" : "/register"}
               variant="contained"
               sx={{
                 bgcolor: "#000000",
@@ -151,7 +153,7 @@ export default function LandingPage() {
                 "&:hover": { bgcolor: "#222222" },
               }}
             >
-              Start Learning
+              {user ? "Go to Dashboard" : "Start Learning"}
             </Button>
             <Button
               component={Link}
@@ -216,7 +218,7 @@ export default function LandingPage() {
             {/* Window Content Mockup */}
             <Box sx={{ p: 4, bgcolor: "#fafafc" }}>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <Box sx={{ border: "1px solid #dadce0", borderRadius: 4, p: 3, bgcolor: "#ffffff" }}>
                     <Typography variant="h6" sx={{ color: "#161637", fontWeight: 700, mb: 1 }}>My Courses</Typography>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f0f0f2", pt: 1.5, mt: 1.5 }}>
@@ -229,7 +231,7 @@ export default function LandingPage() {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={12} md={8}>
+                <Grid size={{ xs: 12, md: 8 }}>
                   <Box sx={{ border: "1px solid #dadce0", borderRadius: 4, p: 3, bgcolor: "#ffffff", height: "100%" }}>
                     <Typography variant="h6" sx={{ color: "#161637", fontWeight: 700, mb: 2 }}>Platform Performance Overview</Typography>
                     <Box sx={{ display: "flex", gap: 2, height: 80, alignItems: "flex-end" }}>
@@ -294,7 +296,7 @@ export default function LandingPage() {
 
         <Grid container spacing={4}>
           {roles.map((role) => (
-            <Grid item xs={12} md={4} key={role.title}>
+            <Grid size={{ xs: 12, md: 4 }} key={role.title}>
               <Card
                 elevation={0}
                 sx={{
@@ -357,7 +359,7 @@ export default function LandingPage() {
 
           <Grid container spacing={4}>
             {features.map((feat) => (
-              <Grid item xs={12} md={4} key={feat.title}>
+              <Grid size={{ xs: 12, md: 4 }} key={feat.title}>
                 <Box
                   sx={{
                     p: 4,
@@ -402,7 +404,7 @@ export default function LandingPage() {
             { stat: "500+", desc: "Expert Trainers" },
             { stat: "120+", desc: "Courses Available" },
           ].map((item) => (
-            <Grid item xs={12} md={4} key={item.desc}>
+            <Grid size={{ xs: 12, md: 4 }} key={item.desc}>
               <Box
                 sx={{
                   p: 4,
@@ -462,7 +464,7 @@ export default function LandingPage() {
 
           <Button
             component={Link}
-            to="/register"
+            to={user ? "/dashboard" : "/register"}
             variant="contained"
             sx={{
               bgcolor: "#fafafc",
@@ -477,7 +479,7 @@ export default function LandingPage() {
               },
             }}
           >
-            Get Started Today
+            {user ? "Go to Dashboard" : "Get Started Today"}
           </Button>
         </Container>
       </Box>

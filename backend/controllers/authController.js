@@ -174,7 +174,7 @@ const sendOtp = async (req, res) => {
       html: `
         <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; max-width: 500px;">
           <h2 style="color: #4f46e5; margin-bottom: 16px;">Verify Your Email</h2>
-          <p>Thank you for signing up for LearnSphere LMS. Use the verification code below to complete your registration:</p>
+          <p>Thank you for signing up for Overflow LMS. Use the verification code below to complete your registration:</p>
           <div style="background-color: #f8fafc; padding: 16px; text-align: center; border-radius: 8px; margin: 24px 0;">
             <span style="font-size: 24px; font-family: monospace; font-weight: bold; letter-spacing: 4px; color: #1e1b4b;">${otp}</span>
           </div>
@@ -255,7 +255,7 @@ const forgotPassword = async (req, res) => {
     // Send the email
     await sendEmail({
       to: email,
-      subject: 'LearnSphere LMS - Password Reset Code',
+      subject: 'Overflow LMS - Password Reset Code',
       text: `Your password reset code is: ${otp}. It is valid for 5 minutes.`,
       html: `
         <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; max-width: 500px;">

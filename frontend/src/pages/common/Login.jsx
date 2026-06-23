@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Box, 
-  Container, 
   Card, 
   CardContent, 
   Typography, 
@@ -48,7 +47,47 @@ export default function Login() {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ py: 10 }}>
+    <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 64px)' }}>
+      {/* Left Gradient Panel — desktop only */}
+      <Box
+        sx={{
+          display: { xs: 'none', md: 'flex' },
+          width: '45%',
+          background: 'linear-gradient(145deg, #161637 0%, #1e1e50 40%, #0085e4 100%)',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          px: 8,
+          py: 6,
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Decorative circles */}
+        <Box sx={{ position: 'absolute', top: -80, right: -80, width: 260, height: 260, borderRadius: '50%', bgcolor: 'rgba(255,255,255,0.04)' }} />
+        <Box sx={{ position: 'absolute', bottom: -60, left: -60, width: 200, height: 200, borderRadius: '50%', bgcolor: 'rgba(255,255,255,0.03)' }} />
+        <Box sx={{ position: 'absolute', top: '40%', right: '20%', width: 120, height: 120, borderRadius: '50%', bgcolor: 'rgba(0,133,228,0.15)' }} />
+
+        <Typography variant="h3" sx={{ color: '#ffffff', fontWeight: 800, mb: 2, letterSpacing: '-0.6px', lineHeight: 1.2 }}>
+          Welcome back to<br />Overflow LMS
+        </Typography>
+        <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.7)', maxWidth: 360, lineHeight: 1.7, mb: 4 }}>
+          Access your courses, track your progress, and continue your learning journey right where you left off.
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 3 }}>
+          {['500+ Courses', '10k+ Students', 'Expert Trainers'].map((stat) => (
+            <Box key={stat} sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.08)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <Typography variant="caption" sx={{ color: '#ffffff', fontWeight: 600, fontSize: '12px' }}>
+                {stat}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+
+      {/* Right Form Panel */}
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', py: { xs: 6, md: 4 }, px: { xs: 2, sm: 4 } }}>
+        <Box sx={{ width: '100%', maxWidth: 420 }}>
       <Card 
         elevation={0} 
         sx={{ 
@@ -177,6 +216,8 @@ export default function Login() {
           </Box>
         </CardContent>
       </Card>
-    </Container>
+        </Box>
+      </Box>
+    </Box>
   );
 }

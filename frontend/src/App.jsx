@@ -13,6 +13,7 @@ import Login from './pages/common/Login';
 import Register from './pages/common/Register';
 import ForgotPassword from './pages/common/ForgotPassword';
 import Profile from './pages/common/Profile';
+import About from './pages/common/About';
 import StudentDashboard from './pages/student/StudentDashboard';
 import TrainerDashboard from './pages/trainer/TrainerDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -26,6 +27,9 @@ import TrainerCourses from './pages/trainer/TrainerCourses';
 import TrainerTopics from './pages/trainer/TrainerTopics';
 import TrainerStudents from './pages/trainer/TrainerStudents';
 import StudentOverview from './pages/student/StudentOverview';
+import StudentCatalog from './pages/student/StudentCatalog';
+import StudentCourses from './pages/student/StudentCourses';
+import StudentLearn from './pages/student/StudentLearn';
 import { AuthProvider } from './context/AuthContext';
 
 
@@ -47,6 +51,7 @@ export default function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/about" element={<About />} />
                 
                 {/* Unified Dashboard Nested Layout and Sub-Routes */}
                 <Route path="/dashboard" element={<DashboardDispatcher />}>
@@ -69,6 +74,9 @@ export default function App() {
                   {/* Student dashboard nested layouts */}
                   <Route path="student" element={<StudentDashboard />}>
                     <Route index element={<StudentOverview />} />
+                    <Route path="catalog" element={<StudentCatalog />} />
+                    <Route path="courses" element={<StudentCourses />} />
+                    <Route path="courses/:courseId/learn" element={<StudentLearn />} />
                   </Route>
                 </Route>
               </Routes>

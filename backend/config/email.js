@@ -24,7 +24,7 @@ const sendEmail = async ({ to, subject, text, html }) => {
   });
 
   const mailOptions = {
-    from: `"LearnSphere LMS" <${emailUser}>`,
+    from: `"Overflow LMS" <${emailUser}>`,
     to,
     subject,
     text,

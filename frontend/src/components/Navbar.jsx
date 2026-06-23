@@ -48,13 +48,14 @@ export default function Navbar() {
 
   return (
     <AppBar 
-      position="static" 
+      position="sticky" 
       color="inherit" 
       elevation={0}
       sx={{
-        bgcolor: '#ffffff', // Pure White surface to separate from background canvas
-        borderBottom: '1px solid #dadce0', // Hairline separation
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)', // Very subtle shadow for depth
+        bgcolor: 'rgba(255, 255, 255, 0.6)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: '1px solid rgba(218, 220, 224, 0.5)',
         zIndex: 1100
       }}
     >
@@ -98,6 +99,21 @@ export default function Navbar() {
                   Dashboard
                 </Button>
               )}
+              <Button
+                component={Link}
+                to="/about"
+                sx={{
+                  color: '#666666',
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  letterSpacing: '-0.12px',
+                  p: 0,
+                  minWidth: 'auto',
+                  '&:hover': { color: '#161637', bgcolor: 'transparent' }
+                }}
+              >
+                About
+              </Button>
             </Box>
           )}
 
@@ -138,12 +154,18 @@ export default function Navbar() {
                   <MenuItem key="dashboard" onClick={handleDashboardClick} sx={{ fontWeight: 500, color: '#666666' }}>
                     Dashboard
                   </MenuItem>,
+                  <MenuItem key="about" component={Link} to="/about" onClick={handleMenuClose} sx={{ fontWeight: 500, color: '#666666' }}>
+                    About
+                  </MenuItem>,
                   <MenuItem key="logout" onClick={handleLogout} sx={{ fontWeight: 600, color: '#d32f2f' }}>
                     Logout
                   </MenuItem>
                 ] : [
                   <MenuItem key="login" component={Link} to="/login" onClick={handleMenuClose} sx={{ fontWeight: 500, color: '#666666' }}>
                     Login
+                  </MenuItem>,
+                  <MenuItem key="about" component={Link} to="/about" onClick={handleMenuClose} sx={{ fontWeight: 500, color: '#666666' }}>
+                    About
                   </MenuItem>,
                   <MenuItem key="register" component={Link} to="/register" onClick={handleMenuClose} sx={{ fontWeight: 600, color: '#0085e4' }}>
                     Get Started
